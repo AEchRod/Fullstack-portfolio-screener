@@ -12,5 +12,6 @@ WTForms, YFinance
 
 #### Current errors
 
-It currently fails to show data once the form has been submitted, there seems to be an error in passing data as an in input in the form as a value for
+It currently fails to show data once the form has been submitted, there seems to be an error in passing input data from the form as a value/variable for
 the data we want to retrieve for the stocks?
+i.e. interval=none (EVEN THOUGH INTERVAL HAS BEEN SELECTED IN FORM)
