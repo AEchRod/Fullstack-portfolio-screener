@@ -12,13 +12,3 @@ class PortfolioForm(FlaskForm): #inheriting from FlaskForm
     time_frame = SelectField(u'Select time frame: ', choices=time_frame_choices)
     time_interval = SelectField(u'Select time interval: ', choices=time_interval_choices)
     submit = SubmitField('See your portfolio!')
-
-#portfolio_list = portfolio_ticker.split(" ")
-#how to make list from user input, i.e. class StringField
-
-
-    """portfolio_filler = str(input("Please input tickers to add to your stock portfolio: "))
-    # this breaks the user input into a list so we can check each individual ticker.
-    portfolio_list = portfolio_filler.split(" ")
-    time_period = str(input("Please select time frame (1d, 1mo): "))
-    time_interval = str(input("Please select time interval (1h, 1d, 1wk): "))"""
