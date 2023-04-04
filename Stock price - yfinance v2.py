@@ -1,11 +1,9 @@
 import os
-from flask import Flask, render_template, jsonify, redirect, url_for, request
-from form import PortfolioForm, csrf, time_frame_choices, time_interval_choices
+from flask import Flask, render_template, redirect, url_for
+from form import PortfolioForm, csrf
 import yfinance as yf
-import pandas as pd
 import pytz
 import datetime as dt
-from pandas_datareader import data as pdr
 
 
 app = Flask(__name__)
