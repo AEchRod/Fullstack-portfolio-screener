@@ -1,4 +1,4 @@
-# Fullstack-portfolio-screener (beta)
+# Fullstack-portfolio-screener
 
 ## Description 
 
