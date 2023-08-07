@@ -1,0 +1,13 @@
+{% extends "basev2.html" %}
+
+{% block content %}
+
+    <div class="row col-12 text-center">
+        <h2>Here are your results!</h2>
+    </div>
+     <div class="row col-12 text-center">
+         <table class="table table-bordered">
+             {{data_html | safe}}
+         </table>
+     </div>
+{% endblock %}
