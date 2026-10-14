@@ -1,13 +1,105 @@
 {% extends "basev2.html" %}
 
 {% block content %}
+<main class="container py-3">
 
-    <div class="row col-12 text-center">
-        <h2>Here are your results!</h2>
+    <div class="d-flex flex-wrap align-items-end justify-content-between gap-3 mb-4">
+        <div>
+            <h2 class="mb-1">Here are your results!</h2>
+            <p class="text-body-secondary mb-0">{{ tickers|join(', ') }} &middot; {{ time_frame }} time frame &middot; {{ time_interval }} interval</p>
+        </div>
+        <a class="btn btn-outline-primary" href="{{ url_for('start_page') }}">New search</a>
     </div>
-     <div class="row col-12 text-center">
-         <table class="table table-bordered">
-             {{data_html | safe}}
-         </table>
-     </div>
+
+    {% if error %}
+        <div class="alert alert-danger" role="alert">{{ error }}</div>
+    {% elif not chart_data %}
+        <div class="alert alert-warning" role="alert">
+            No price data was found for {{ missing|join(', ') }}. Check the ticker symbols, or try another time frame or interval.
+        </div>
+    {% elif missing %}
+        <div class="alert alert-warning" role="alert">
+            No price data was found for {{ missing|join(', ') }}, so {{ 'it is' if missing|length == 1 else 'they are' }} left out below.
+        </div>
+    {% endif %}
+
+    {% if chart_data %}
+    <!-- one tile per ticker: latest close, change over the time frame and the range it traded in -->
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-3 mb-4">
+        {% for s in chart_data.series %}
+        <div class="col">
+            <div class="card stat-tile h-100">
+                <div class="card-body">
+                    <div class="stat-label"><span class="series-key series-{{ loop.index }}"></span>{{ s.ticker }}</div>
+                    <div class="stat-value">{{ s.stats.last|price }}</div>
+                    {% set change = s.stats.change_pct %}
+                    <div class="stat-delta {{ 'delta-up' if change and change > 0 else 'delta-down' if change and change < 0 }}">
+                        <span aria-hidden="true">{{ '▲' if change and change > 0 else '▼' if change and change < 0 else '■' }}</span>
+                        {{ s.stats.change|price(signed=True) }} ({{ change|percent }})
+                        <span class="text-body-secondary">over {{ time_frame }}</span>
+                    </div>
+                    <div class="stat-note">Range {{ s.stats.low|price }} – {{ s.stats.high|price }}</div>
+                    <div class="stat-note">As of {{ s.stats.as_of }}</div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="card chart-card mb-4">
+        <div class="card-body">
+            <div class="d-flex flex-wrap align-items-start justify-content-between gap-2 mb-3">
+                <div>
+                    <h3 class="h5 mb-1">Price history</h3>
+                    <p class="small text-body-secondary mb-0" id="price-subtitle">Closing price</p>
+                </div>
+                <div class="btn-group btn-group-sm" role="group" aria-label="Show prices as">
+                    <input type="radio" class="btn-check" name="price-mode" id="mode-change" value="change" autocomplete="off">
+                    <label class="btn btn-outline-secondary" for="mode-change">% change</label>
+                    <input type="radio" class="btn-check" name="price-mode" id="mode-price" value="price" autocomplete="off">
+                    <label class="btn btn-outline-secondary" for="mode-price">Price</label>
+                </div>
+            </div>
+            <div class="chart-box chart-box-lg">
+                <canvas id="price-chart" role="img" aria-label="Line chart of the closing price of {{ tickers|join(', ') }}. The same values are in the table below."></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="card chart-card mb-4">
+        <div class="card-body">
+            <h3 class="h5 mb-1">Trading volume</h3>
+            <p class="small text-body-secondary mb-3">Shares traded per {{ time_interval }} interval</p>
+            <div class="row row-cols-1 {{ 'row-cols-md-2' if chart_data.series|length > 1 }} g-4">
+                {% for s in chart_data.series %}
+                <div class="col">
+                    {% if chart_data.series|length > 1 %}
+                    <div class="small fw-semibold mb-1"><span class="series-key series-{{ loop.index }}"></span>{{ s.ticker }}</div>
+                    {% endif %}
+                    <div class="chart-box chart-box-sm">
+                        <canvas class="volume-chart" data-index="{{ loop.index0 }}" role="img" aria-label="Bar chart of the trading volume of {{ s.ticker }}. The same values are in the table below."></canvas>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <details class="card data-table mb-4">
+        <summary class="card-header">Show the data as a table</summary>
+        <div class="table-responsive table-scroll">
+            {{ table_html | safe }}
+        </div>
+    </details>
+
+    <script type="application/json" id="chart-data">{{ chart_data|tojson }}</script>
+    {% endif %}
+</main>
+{% endblock %}
+
+{% block scripts %}
+{% if chart_data %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js" integrity="sha384-jb8JQMbMoBUzgWatfe6COACi2ljcDdZQ2OxczGA3bGNeWe+6DChMTBJemed7ZnvJ" crossorigin="anonymous"></script>
+<script src="{{ url_for('static', filename='charts.js') }}"></script>
+{% endif %}
 {% endblock %}

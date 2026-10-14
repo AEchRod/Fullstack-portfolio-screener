@@ -1,0 +1,4 @@
+Flask>=3.0
+Flask-WTF>=1.2
+yfinance>=0.2.50
+pandas>=2.0

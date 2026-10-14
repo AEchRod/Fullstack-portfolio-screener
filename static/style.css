@@ -1,0 +1,134 @@
+/* Colours for the page and charts. charts.js reads the same custom properties,
+   so the light and dark values only live here. */
+:root {
+    --page: #f9f9f7;
+    --surface-1: #fcfcfb;
+    --text-primary: #0b0b0b;
+    --text-secondary: #52514e;
+    --text-muted: #898781;
+    --grid: #e1e0d9;
+    --baseline: #c3c2b7;
+    --border: rgba(11, 11, 11, 0.10);
+    --delta-up: #006300;
+    --delta-down: #d03b3b;
+
+    /* one colour per ticker, always used in this order */
+    --series-1: #2a78d6;
+    --series-2: #eb6834;
+    --series-3: #1baf7a;
+    --series-4: #eda100;
+    --series-5: #e87ba4;
+    --series-6: #008300;
+    --series-7: #6250d6;
+    --series-8: #e34948;
+
+    --bs-body-bg: var(--page);
+}
+
+:root[data-bs-theme="dark"] {
+    --page: #0d0d0d;
+    --surface-1: #1a1a19;
+    --text-primary: #f0efec;
+    --text-secondary: #c3c2b7;
+    --text-muted: #898781;
+    --grid: #2c2c2a;
+    --baseline: #383835;
+    --border: rgba(255, 255, 255, 0.10);
+    --delta-up: #0ca30c;
+    --delta-down: #e66767;
+
+    --series-1: #3987e5;
+    --series-2: #d95926;
+    --series-3: #199e70;
+    --series-4: #c98500;
+    --series-5: #d55181;
+    --series-6: #008300;
+    --series-7: #9085e9;
+    --series-8: #e66767;
+
+    --bs-body-bg: var(--page);
+}
+
+.card {
+    --bs-card-bg: var(--surface-1);
+    --bs-card-border-color: var(--border);
+}
+
+/* the small coloured line beside a ticker name that matches its chart colour */
+.series-key {
+    display: inline-block;
+    width: 14px;
+    height: 2px;
+    margin-right: 8px;
+    vertical-align: middle;
+    border-radius: 1px;
+    background: var(--key);
+}
+.series-1 { --key: var(--series-1); }
+.series-2 { --key: var(--series-2); }
+.series-3 { --key: var(--series-3); }
+.series-4 { --key: var(--series-4); }
+.series-5 { --key: var(--series-5); }
+.series-6 { --key: var(--series-6); }
+.series-7 { --key: var(--series-7); }
+.series-8 { --key: var(--series-8); }
+
+.stat-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+.stat-value {
+    margin: 0.25rem 0;
+    font-size: 1.75rem;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--text-primary);
+}
+.stat-delta {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+.stat-delta.delta-up { color: var(--delta-up); }
+.stat-delta.delta-down { color: var(--delta-down); }
+.stat-delta + .stat-note {
+    margin-top: 0.25rem;
+}
+.stat-note {
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+}
+
+/* Chart.js sizes the canvas to fill this box, axis labels included */
+.chart-box {
+    position: relative;
+    height: 22rem;
+}
+.chart-box-sm {
+    height: 11rem;
+}
+@media (max-width: 575.98px) {
+    .chart-box { height: 16rem; }
+    .chart-box-sm { height: 10rem; }
+}
+
+.data-table summary {
+    cursor: pointer;
+}
+.table-scroll {
+    max-height: 28rem;
+}
+.table-scroll table {
+    --bs-table-bg: var(--surface-1);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+.table-scroll thead {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+/* ticker names span their columns */
+.table-scroll thead tr:first-child th {
+    text-align: center;
+}
